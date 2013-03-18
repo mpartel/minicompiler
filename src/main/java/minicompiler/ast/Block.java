@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Block extends Node implements Statement {
+public class Block implements Statement {
     public final List<Statement> statements;
 
     public Block(List<Statement> statements) {

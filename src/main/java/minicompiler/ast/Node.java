@@ -1,5 +1,5 @@
 package minicompiler.ast;
 
-public abstract class Node {
-    public abstract void accept(AstVisitor v);
+public interface Node {
+    public void accept(AstVisitor v);
 }

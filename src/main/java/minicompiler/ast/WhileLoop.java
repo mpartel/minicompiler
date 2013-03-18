@@ -1,6 +1,6 @@
 package minicompiler.ast;
 
-public class WhileLoop extends Node implements Statement {
+public class WhileLoop implements Statement {
     public final Expr head;
     public final Statement body;
 

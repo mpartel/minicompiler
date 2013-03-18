@@ -1,6 +1,6 @@
 package minicompiler.ast;
 
-public class Assignment extends Node implements Statement {
+public class Assignment implements Statement {
     public final String varName;
     public final Expr expr;
 

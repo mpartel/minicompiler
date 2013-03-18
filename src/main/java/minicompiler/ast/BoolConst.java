@@ -1,6 +1,6 @@
 package minicompiler.ast;
 
-public class BoolConst extends Node implements Expr {
+public class BoolConst implements Expr {
     public final boolean value;
 
     public BoolConst(boolean value) {

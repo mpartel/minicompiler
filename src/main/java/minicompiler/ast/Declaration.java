@@ -2,7 +2,7 @@ package minicompiler.ast;
 
 import minicompiler.types.Type;
 
-public class Declaration extends Node implements Statement {
+public class Declaration implements Statement {
     public final String varName;
     public final Type type;
     public final Expr expr;

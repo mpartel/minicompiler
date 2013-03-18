@@ -1,6 +1,6 @@
 package minicompiler.ast;
 
-public class UnaryOp extends Node implements Expr {
+public class UnaryOp implements Expr {
     public final String opName;
     public final Expr operand;
 

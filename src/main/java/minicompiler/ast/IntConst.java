@@ -1,6 +1,6 @@
 package minicompiler.ast;
 
-public class IntConst extends Node implements Expr {
+public class IntConst implements Expr {
     public final int value;
 
     public IntConst(int value) {

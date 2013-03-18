@@ -4,7 +4,7 @@ import com.google.common.base.Joiner;
 import java.util.Arrays;
 import java.util.List;
 
-public class FunctionCall extends Node implements Expr {
+public class FunctionCall implements Expr {
     public final String functionName;
     public final List<Expr> arguments;
 

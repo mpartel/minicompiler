@@ -1,4 +1,4 @@
 package minicompiler.ast;
 
-public interface Statement {
+public interface Statement extends Node {
 }

@@ -1,6 +1,6 @@
 package minicompiler.ast;
 
-public class Var extends Node implements Expr {
+public class Var implements Expr {
     public final String name;
 
     public Var(String name) {

@@ -1,6 +1,6 @@
 package minicompiler.ast;
 
-public class IfStatement extends Node implements Statement {
+public class IfStatement implements Statement {
     public final Expr condition;
     public final Statement thenClause;
     public final Statement elseClause;

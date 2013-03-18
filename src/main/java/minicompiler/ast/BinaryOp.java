@@ -1,6 +1,6 @@
 package minicompiler.ast;
 
-public class BinaryOp extends Node implements Expr {
+public class BinaryOp implements Expr {
     public final Expr left;
     public final String opName;
     public final Expr right;
