@@ -173,7 +173,6 @@ public class Parser {
     private Expr parseSubfactor() {
         Token t = consume();
         if (t.type == LPAREN) {
-            consume(LPAREN);
             Expr e = parseExpr();
             consume(RPAREN);
             return e;
@@ -193,7 +192,7 @@ public class Parser {
                     } else {
                         return new Var(t.text);
                     }
-                default: return fail("integer or boolean or variable expected");
+                default: return fail("integer or boolean or variable expected instead of '" + t.text + "'");
             }
         }
     }

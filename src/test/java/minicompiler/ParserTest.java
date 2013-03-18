@@ -48,6 +48,15 @@ public class ParserTest {
     }
     
     @Test
+    public void testWhileStatementWithParens() {
+        Statement actual = parser("while (x < 3) do {}").parseCompletely();
+        Expr head = new BinaryOp(new Var("x"), "<", new IntConst(3));
+        Statement body = new Block();
+        Statement expected = new WhileLoop(head, body);
+        assertEquals(expected, actual);
+    }
+    
+    @Test
     public void testSimpleIfStatement() {
         Statement actual = parser("if x <> 0 then print(x);").parseCompletely();
         Expr condition = new BinaryOp(new Var("x"), "<>", new IntConst(0));
