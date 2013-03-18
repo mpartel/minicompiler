@@ -16,6 +16,10 @@ public class FunctionCall extends Node implements Expr {
     public FunctionCall(String functionName, Expr... arguments) {
         this(functionName, Arrays.asList(arguments));
     }
+    
+    public void accept(AstVisitor v) {
+        v.visit(this);
+    }
 
     @Override
     public boolean equals(Object obj) {

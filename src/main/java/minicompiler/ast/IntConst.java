@@ -7,6 +7,10 @@ public class IntConst extends Node implements Expr {
         this.value = value;
     }
     
+    public void accept(AstVisitor v) {
+        v.visit(this);
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof IntConst) {

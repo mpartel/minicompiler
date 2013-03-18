@@ -11,6 +11,10 @@ public class BinaryOp extends Node implements Expr {
         this.right = right;
     }
     
+    public void accept(AstVisitor v) {
+        v.visit(this);
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof BinaryOp) {

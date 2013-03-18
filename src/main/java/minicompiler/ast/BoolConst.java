@@ -6,6 +6,10 @@ public class BoolConst extends Node implements Expr {
     public BoolConst(boolean value) {
         this.value = value;
     }
+    
+    public void accept(AstVisitor v) {
+        v.visit(this);
+    }
 
     @Override
     public boolean equals(Object obj) {

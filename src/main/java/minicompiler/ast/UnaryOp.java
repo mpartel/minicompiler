@@ -9,6 +9,10 @@ public class UnaryOp extends Node implements Expr {
         this.operand = operand;
     }
     
+    public void accept(AstVisitor v) {
+        v.visit(this);
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof UnaryOp) {

@@ -8,6 +8,10 @@ public class Assignment extends Node implements Statement {
         this.varName = varName;
         this.expr = expr;
     }
+    
+    public void accept(AstVisitor v) {
+        v.visit(this);
+    }
 
     @Override
     public boolean equals(Object obj) {

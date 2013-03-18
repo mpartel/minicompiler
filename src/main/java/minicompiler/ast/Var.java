@@ -6,7 +6,11 @@ public class Var extends Node implements Expr {
     public Var(String name) {
         this.name = name;
     }
-
+    
+    public void accept(AstVisitor v) {
+        v.visit(this);
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Var) {

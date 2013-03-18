@@ -15,6 +15,10 @@ public class Block extends Node implements Statement {
     public Block(Statement... statements) {
         this(Arrays.asList(statements));
     }
+    
+    public void accept(AstVisitor v) {
+        v.visit(this);
+    }
 
     @Override
     public boolean equals(Object obj) {

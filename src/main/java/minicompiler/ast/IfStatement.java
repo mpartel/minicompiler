@@ -16,6 +16,10 @@ public class IfStatement extends Node implements Statement {
         this.thenClause = thenClause;
         this.elseClause = new EmptyStatement();
     }
+    
+    public void accept(AstVisitor v) {
+        v.visit(this);
+    }
 
     @Override
     public boolean equals(Object obj) {

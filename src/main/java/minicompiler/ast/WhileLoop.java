@@ -8,6 +8,10 @@ public class WhileLoop extends Node implements Statement {
         this.head = head;
         this.body = body;
     }
+    
+    public void accept(AstVisitor v) {
+        v.visit(this);
+    }
 
     @Override
     public boolean equals(Object obj) {

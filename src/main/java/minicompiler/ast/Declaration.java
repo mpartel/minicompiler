@@ -13,6 +13,10 @@ public class Declaration extends Node implements Statement {
         this.expr = expr;
     }
     
+    public void accept(AstVisitor v) {
+        v.visit(this);
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Declaration) {
