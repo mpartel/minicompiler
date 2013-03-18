@@ -20,6 +20,10 @@ public class IfStatement implements Statement {
     public void accept(AstVisitor v) {
         v.visit(this);
     }
+    
+    public boolean hasElseClause() {
+        return !(elseClause instanceof EmptyStatement);
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -41,10 +45,10 @@ public class IfStatement implements Statement {
 
     @Override
     public String toString() {
-        if (elseClause instanceof EmptyStatement) {
-            return "if (" + condition + ") " + thenClause;
+        if (hasElseClause()) {
+            return "if " + condition + " then " + thenClause + " else " + elseClause;
         } else {
-            return "if (" + condition + ") " + thenClause + " else " + elseClause;
+            return "if " + condition + " then " + thenClause;
         }
     }
 }

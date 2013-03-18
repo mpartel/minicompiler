@@ -32,6 +32,6 @@ public class WhileLoop implements Statement {
 
     @Override
     public String toString() {
-        return "while (" + head + ") { " + body + " }";
+        return "while " + head + " do " + body;
     }
 }
