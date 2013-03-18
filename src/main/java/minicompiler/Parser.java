@@ -24,6 +24,12 @@ public class Parser {
         }
     }
     
+    public Statement parseCompletely() {
+        Statement s = parseStatement();
+        consume(EOF);
+        return s;
+    }
+    
     public Statement parseStatement() {
         Token first = peek();
         Token second = peekAtOffset(1);
@@ -44,7 +50,7 @@ public class Parser {
         }
     }
     
-    public Block parseBlock() {
+    private Block parseBlock() {
         consume(LBRACE);
         ArrayList<Statement> statements = new ArrayList<Statement>();
         while (true) {
