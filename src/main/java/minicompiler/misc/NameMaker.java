@@ -10,6 +10,8 @@ public class NameMaker {
         if (!prefixToNextNumber.containsKey(prefix)) {
             prefixToNextNumber.put(prefix, 1);
         }
-        return prefix + prefixToNextNumber.get(prefix);
+        int n = prefixToNextNumber.get(prefix);
+        prefixToNextNumber.put(prefix, n + 1);
+        return prefix + n;
     }
 }

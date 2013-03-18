@@ -24,6 +24,6 @@ public class IrIntConst extends IrRValue {
 
     @Override
     public String toString() {
-        return super.toString();
+        return "" + value;
     }
 }

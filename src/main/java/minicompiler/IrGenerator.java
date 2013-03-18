@@ -37,40 +37,40 @@ public class IrGenerator extends AstVisitor {
     @Override
     public void visit(IfStatement ifStmt) {
         String elseLabel = nameMaker.makeName("else");
-        String ifEndLabel = nameMaker.makeName("ifEnd");
+        String endLabel = nameMaker.makeName("ifEnd");
         
         ifStmt.condition.accept(this);
         if (ifStmt.hasElseClause()) {
             emit(new IrGotoIfNot(elseLabel, lastRValue));
         } else {
-            emit(new IrGotoIfNot(ifEndLabel, lastRValue));
+            emit(new IrGotoIfNot(endLabel, lastRValue));
         }
         
         ifStmt.thenClause.accept(this);
         if (ifStmt.hasElseClause()) {
-            emit(new IrGoto(ifEndLabel));
+            emit(new IrGoto(endLabel));
             
             emit(new IrLabel(elseLabel));
             ifStmt.elseClause.accept(this);
         }
         
-        emit(new IrLabel(ifEndLabel));
+        emit(new IrLabel(endLabel));
     }
 
     @Override
     public void visit(WhileLoop whileLoop) {
-        String whileHeadLabel = nameMaker.makeName("whileHead");
-        String whileEndLabel = nameMaker.makeName("whileEnd");
+        String headLabel = nameMaker.makeName("whileHead");
+        String endLabel = nameMaker.makeName("whileEnd");
         
-        emit(new IrLabel(whileHeadLabel));
+        emit(new IrLabel(headLabel));
         
         whileLoop.head.accept(this);
-        emit(new IrGotoIfNot(whileEndLabel, lastRValue));
+        emit(new IrGotoIfNot(endLabel, lastRValue));
         
         whileLoop.body.accept(this);
-        emit(new IrGoto(whileHeadLabel));
+        emit(new IrGoto(headLabel));
         
-        emit(new IrLabel(whileEndLabel));
+        emit(new IrLabel(endLabel));
     }
 
     @Override
@@ -96,7 +96,14 @@ public class IrGenerator extends AstVisitor {
 
     @Override
     public void visit(FunctionCall call) {
-        //TODO
+        ArrayList<IrRValue> argRValues = new ArrayList<IrRValue>(call.arguments.size());
+        for (Expr arg : call.arguments) {
+            arg.accept(this);
+            argRValues.add(lastRValue);
+        }
+        
+        String assignedVar = nameMaker.makeName("$resultOf_" + call.functionName + "_");
+        emit(new IrCall(assignedVar, call.functionName, argRValues));
     }
 
     @Override
