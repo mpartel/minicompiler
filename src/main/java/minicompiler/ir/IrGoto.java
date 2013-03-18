@@ -8,6 +8,11 @@ public class IrGoto extends IrCommand {
     }
     
     @Override
+    public void accept(IrVisitor visitor) {
+        visitor.visit(this);
+    }
+    
+    @Override
     public String getAssignedVar() {
         return null;
     }

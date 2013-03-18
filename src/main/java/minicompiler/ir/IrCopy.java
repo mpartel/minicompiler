@@ -8,6 +8,11 @@ public class IrCopy extends IrCommand {
         this.assignedVar = assignedVar;
         this.rvalue = rvalue;
     }
+    
+    @Override
+    public void accept(IrVisitor visitor) {
+        visitor.visit(this);
+    }
 
     @Override
     public String getAssignedVar() {

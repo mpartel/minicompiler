@@ -8,6 +8,11 @@ public class IrGotoIf extends IrCommand {
         this.labelName = labelName;
         this.condition = condition;
     }
+    
+    @Override
+    public void accept(IrVisitor visitor) {
+        visitor.visit(this);
+    }
 
     @Override
     public String getAssignedVar() {
