@@ -5,12 +5,14 @@ public class Token {
         LPAREN, RPAREN,
         LBRACE, RBRACE,
         SEMICOLON,
+        COMMA,
         PLUS, MINUS, TIMES, DIV,
         AND, OR, NOT,
         ASSIGN,
         COLON,
+        EQ, NEQ, // ==, <>
         LT, GT, LTE, GTE, // <, >, <=, >=
-        IF, WHILE,
+        IF, THEN, ELSE, WHILE, DO,
         INTCONST, BOOLCONST,
         IDENTIFIER,
         EOF

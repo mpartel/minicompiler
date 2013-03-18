@@ -1,6 +1,7 @@
 package minicompiler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static minicompiler.Token.Type.*;
@@ -10,6 +11,16 @@ public class Lexer {
     private static final Pattern rBoolConst = Pattern.compile("true|false");
     private static final Pattern rIdentifier = Pattern.compile("[a-zA-Z_][a-zA-Z0-9_]*");
 
+    private static final HashMap<String, Token.Type> keywords = new HashMap<String, Token.Type>();
+    
+    static {
+        keywords.put("if", IF);
+        keywords.put("then", THEN);
+        keywords.put("else", ELSE);
+        keywords.put("while", WHILE);
+        keywords.put("do", DO);
+    }
+    
     private ArrayList<Token> result;
     private String input;
     private int line;
@@ -31,11 +42,13 @@ public class Lexer {
                     tryTok("(", LPAREN) || tryTok(")", RPAREN) ||
                     tryTok("{", LBRACE) || tryTok("}", RBRACE) ||
                     tryTok(";", SEMICOLON) ||
+                    tryTok(",", COMMA) ||
                     tryTok("+", PLUS) || tryTok("-", MINUS) ||
                     tryTok("*", TIMES) || tryTok("/", DIV) ||
                     tryTok("&&", AND) || tryTok("||", OR) || tryTok("!", NOT) ||
                     tryTok(":=", ASSIGN) ||
                     tryTok(":", COLON) ||
+                    tryTok("==", EQ) || tryTok("<>", NEQ) ||
                     tryTok("<=", LTE) || tryTok(">=", GTE) ||
                     tryTok("<", LT) || tryTok(">", GT) ||
                     tryRegex(rIntConst, INTCONST) ||
@@ -79,12 +92,11 @@ public class Lexer {
     private boolean tryKeywordOrIdentifier() {
         if (tryRegex(rIdentifier, IDENTIFIER)) {
             Token tok = result.get(result.size() - 1);
-            if (tok.text.equals("if")) {
-                tok = new Token(IF, "if", tok.line, tok.col);
-            } else if (tok.text.equals("while")) {
-                tok = new Token(WHILE, "while", tok.line, tok.col);
+            Token.Type kwType = keywords.get(tok.text);
+            if (kwType != null) {
+                tok = new Token(kwType, tok.text, tok.line, tok.col);
+                result.set(result.size() - 1, tok);
             }
-            result.set(result.size() - 1, tok);
             return true;
         } else {
             return false;

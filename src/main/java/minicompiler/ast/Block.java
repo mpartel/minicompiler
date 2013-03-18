@@ -1,8 +1,7 @@
 package minicompiler.ast;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
-import com.google.common.collect.Collections2;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,6 +10,10 @@ public class Block extends Node implements Statement {
 
     public Block(List<Statement> statements) {
         this.statements = Collections.unmodifiableList(statements);
+    }
+    
+    public Block(Statement... statements) {
+        this(Arrays.asList(statements));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package minicompiler;
 
 import java.util.ArrayList;
+import java.util.List;
 import minicompiler.ast.*;
 import static minicompiler.Token.Type.*;
 import minicompiler.types.BoolType;
@@ -25,27 +26,21 @@ public class Parser {
     
     public Statement parseStatement() {
         Token first = peek();
+        Token second = peekAtOffset(1);
         if (first.type == LBRACE) {
             return parseBlock();
+        } else if (first.type == WHILE) {
+            return parseWhile();
+        } else if (first.type == IF) {
+            return parseIf();
+        } else if (first.type == IDENTIFIER && second.type == COLON) {
+            return parseDeclaration();
+        } else if (first.type == IDENTIFIER && second.type == ASSIGN) {
+            return parseAssignment();
         } else {
-            Token second = peekAtOffset(1);
-            Statement result;
-            if (first.type == IDENTIFIER && second.type == COLON) {
-                String varName = consume(IDENTIFIER).text;
-                Type type = parseType();
-                consume(ASSIGN);
-                Expr expr = parseExpr();
-                result = new Declaration(varName, type, expr);
-            } else if (first.type == IDENTIFIER && second.type == ASSIGN) {
-                String varName = consume(IDENTIFIER).text;
-                consume(ASSIGN);
-                Expr expr = parseExpr();
-                result = new Assignment(varName, expr);
-            } else {
-                result = parseExpr();
-            }
+            Expr expr = parseExpr();
             consume(SEMICOLON);
-            return result;
+            return expr;
         }
     }
     
@@ -64,6 +59,48 @@ public class Parser {
         return new Block(statements);
     }
     
+    private WhileLoop parseWhile() {
+        consume(WHILE);
+        Expr head = parseExpr();
+        consume(DO);
+        Statement body = parseStatement();
+        return new WhileLoop(head, body);
+    }
+    
+    private IfStatement parseIf() {
+        consume(IF);
+        Expr condition = parseExpr();
+        consume(THEN);
+        Statement thenClause = parseStatement();
+        if (peek().type == ELSE) {
+            consume(ELSE);
+            Statement elseClause = parseStatement();
+            return new IfStatement(condition, thenClause, elseClause);
+        } else {
+            return new IfStatement(condition, thenClause);
+        }
+    }
+    
+    private Statement parseDeclaration() {
+        String varName = consume(IDENTIFIER).text;
+        consume(COLON);
+        Type type = parseType();
+        consume(ASSIGN);
+        Expr expr = parseExpr();
+        Statement decl = new Declaration(varName, type, expr);
+        consume(SEMICOLON);
+        return decl;
+    }
+
+    private Statement parseAssignment() {
+        String varName = consume(IDENTIFIER).text;
+        consume(ASSIGN);
+        Expr expr = parseExpr();
+        Statement assignment = new Assignment(varName, expr);
+        consume(SEMICOLON);
+        return assignment;
+    }
+    
     public Expr parseExpr() {
         Expr left = parseSubfactor();
         Token second = peek();
@@ -78,6 +115,10 @@ public class Parser {
         switch (t.type) {
             case RPAREN:
             case SEMICOLON:
+            case COMMA:
+            case THEN:
+            case ELSE:
+            case DO:
             case EOF:
                 return true;
             default:
@@ -89,10 +130,8 @@ public class Parser {
         Token op = peek();
         Expr right;
         switch (op.type) {
-            case LT:
-            case GT:
-            case LTE:
-            case GTE:
+            case AND:
+            case OR:
             case PLUS:
             case MINUS:
                 consume();
@@ -108,6 +147,12 @@ public class Parser {
         Token op = peek();
         Expr right;
         switch (op.type) {
+            case EQ:
+            case NEQ:
+            case LT:
+            case GT:
+            case LTE:
+            case GTE:
             case TIMES:
             case DIV:
                 consume();
@@ -132,10 +177,30 @@ public class Parser {
                 case NOT: return new UnaryOp("!", parseSubfactor());
                 case INTCONST: return new IntConst(Integer.parseInt(t.text));
                 case BOOLCONST: return new BoolConst(Boolean.parseBoolean(t.text));
-                case IDENTIFIER: return new Var(t.text);
+                case IDENTIFIER:
+                    if (peek().type == LPAREN) {
+                        String functionName = t.text;
+                        consume(LPAREN);
+                        List<Expr> args = parseArguments();
+                        consume(RPAREN);
+                        return new FunctionCall(functionName, args);
+                    } else {
+                        return new Var(t.text);
+                    }
                 default: return fail("integer or boolean or variable expected");
             }
         }
+    }
+    
+    private List<Expr> parseArguments() {
+        ArrayList<Expr> result = new ArrayList<Expr>();
+        while (peek().type != RPAREN) {
+            result.add(parseExpr());
+            if (peek().type == COMMA) {
+                consume(COMMA);
+            }
+        }
+        return result;
     }
     
     private Type parseType() {
@@ -150,16 +215,12 @@ public class Parser {
     }
     
     private Token peek() {
-        if (inputIndex < input.size()) {
-            return input.get(inputIndex);
-        } else {
-            return eof;
-        }
+        return peekAtOffset(0);
     }
     
     private Token peekAtOffset(int offset) {
-        if (inputIndex + offset - 1 < input.size()) {
-            return input.get(inputIndex + offset - 1);
+        if (inputIndex + offset < input.size()) {
+            return input.get(inputIndex + offset);
         } else {
             return eof;
         }
