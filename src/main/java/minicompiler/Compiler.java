@@ -9,6 +9,7 @@ import minicompiler.ast.Statement;
 import minicompiler.backend.ia32.IA32CodeGen;
 import minicompiler.ir.IrCommand;
 import minicompiler.misc.StreamUtils;
+import minicompiler.types.StdlibTypes;
 
 public class Compiler {
     public static void compile(Reader sourceCodeReader, Writer asmOutput) throws IOException {
@@ -17,6 +18,8 @@ public class Compiler {
         ArrayList<Token> tokens = Lexer.tokenize(sourceCode);
         
         Statement stmt = Parser.parseStatement(tokens);
+        
+        TypeChecker.checkTypes(stmt, StdlibTypes.getTypes());
         
         List<IrCommand> intermediateRepresentation = IrGenerator.generate(stmt);
         
