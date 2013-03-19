@@ -5,15 +5,6 @@ import java.util.List;
 import minicompiler.errors.CompilerError;
 import minicompiler.ir.*;
 
-/**
- * Generates GNU assembly output from IR code.
- *
- * A pretty good introduction to IA32 assembly with the GNU Assembler is
- * <a href="http://nongnu.uib.no/pgubook/">this book</a>.
- *
- * This implementation is very basic and produces quite inefficient code.
- * Specifically, it makes no attempt to use registers efficiently.
- */
 class IA32FuncVisitor extends IrVisitor {
     private List<IrCommand> input;
     private List<String> output;
@@ -127,6 +118,10 @@ class IA32FuncVisitor extends IrVisitor {
     }
     
     private void emit(String line) {
-        output.add(line);
+        if (!line.endsWith(":") && !line.startsWith(".")) {
+            output.add("    " + line);
+        } else {
+            output.add(line);
+        }
     }
 }

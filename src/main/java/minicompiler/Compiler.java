@@ -23,25 +23,9 @@ public class Compiler {
         
         List<IrCommand> intermediateRepresentation = IrGenerator.generate(stmt);
         
-        List<String> asmLines = new ArrayList<String>();
-        // Add program entry point, call to main and exit with exit code 0.
-        asmLines.add(".globl _start");
-        asmLines.add(".type _start, @function");
-        asmLines.add(".text");
-        asmLines.add("_start:");
-        asmLines.add("  call main");
-        asmLines.add("  movl $1, %eax");
-        asmLines.add("  movl $0, %ebx");
-        asmLines.add("  int $0x80");
-        asmLines.add(".type main, @function");
-        asmLines.add("main:");
-        
-        asmLines.addAll(IA32CodeGen.generateFunctionBody(intermediateRepresentation));
+        List<String> asmLines = IA32CodeGen.generateAsmProgram(intermediateRepresentation);
         
         for (String line : asmLines) {
-            if (!line.endsWith(":") && !line.startsWith(".")) {
-                asmOutput.write("    ");
-            }
             asmOutput.write(line);
             asmOutput.write('\n');
         }
