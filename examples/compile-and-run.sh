@@ -20,9 +20,9 @@ BASENAME=`basename "$SRC" .minilang`
 echo "Compiling"
 java -jar ../target/minicompiler-dev.jar "$SRC" > "$BASENAME.s"
 echo "Assembling"
-as -o "$BASENAME.o" "$BASENAME.s"
+as --32 -march=i686 -o "$BASENAME.o" "$BASENAME.s"
 echo "Linking"
-ld -o "executable-$BASENAME" "$BASENAME.o" ../stdlib/stdlib.o ../stdlib/syscalls.o
+ld -melf_i386 -o "executable-$BASENAME" "$BASENAME.o" ../stdlib/stdlib.o ../stdlib/syscalls.o
 
 echo "Running"
 ./executable-"$BASENAME"
