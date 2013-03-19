@@ -1,5 +1,5 @@
 {
-  n : int := 7;
+  n : int := readInt();
   x : int := 1;
   while n > 1 do {
     x := x * n;
