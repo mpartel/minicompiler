@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import minicompiler.ast.*;
 import static minicompiler.Token.Type.*;
+import minicompiler.errors.ParseError;
 import minicompiler.types.BoolType;
 import minicompiler.types.IntType;
 import minicompiler.types.Type;
@@ -257,6 +258,6 @@ public class Parser {
     
     private <T> T fail(String error) {
         Token t = peek();
-        throw new IllegalArgumentException("Parse error near line " + t.line + " col " + t.col + ": " + error);
+        throw new ParseError("Parse error near line " + t.line + " col " + t.col + ": " + error);
     }
 }

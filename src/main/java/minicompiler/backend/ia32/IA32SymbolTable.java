@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.TreeSet;
+import minicompiler.errors.CompilerError;
 import minicompiler.ir.IrIntConst;
 import minicompiler.ir.IrRValue;
 import minicompiler.ir.IrVar;
@@ -19,7 +20,7 @@ class IA32SymbolTable {
     
     public void reserveSpaceForLocalVar(String var) {
         if (localVars.containsKey(var)) {
-            throw new IllegalArgumentException("Local variable already in symtab: " + var);
+            throw new CompilerError("Local variable already in symtab: " + var);
         }
         int size = 4;
         int addr = stackSpaceForLocals;
@@ -49,7 +50,7 @@ class IA32SymbolTable {
     public String localVarToAsm(String varName) {
         Integer offset = localVars.get(varName);
         if (offset == null) {
-            throw new IllegalArgumentException("Reading unknown variable: " + varName);
+            throw new CompilerError("Reading unknown variable: " + varName);
         }
         return "-" + offset + "(%ebp)";
     }

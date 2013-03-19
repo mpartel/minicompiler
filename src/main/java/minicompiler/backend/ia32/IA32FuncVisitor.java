@@ -2,6 +2,7 @@ package minicompiler.backend.ia32;
 
 import java.util.ArrayList;
 import java.util.List;
+import minicompiler.errors.CompilerError;
 import minicompiler.ir.*;
 
 /**
@@ -75,7 +76,7 @@ class IA32FuncVisitor extends IrVisitor {
         String func = call.functionName;
         IA32Builtin builtin = IA32Builtins.getBuiltin(func);
         if (builtin.argCount != call.args.size()) {
-            throw new IllegalArgumentException("Call to builtin " + func + " takes " + builtin.argCount + " args but " + call.args.size() + " given.");
+            throw new CompilerError("Call to builtin " + func + " takes " + builtin.argCount + " args but " + call.args.size() + " given.");
         }
         
         String[] lines = builtin.generate(symTab, call.args.toArray(new IrRValue[call.args.size()]));

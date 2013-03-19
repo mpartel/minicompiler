@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static minicompiler.Token.Type.*;
+import minicompiler.errors.LexerError;
 
 public class Lexer {
     public static ArrayList<Token> tokenize(String input) {
@@ -59,7 +60,7 @@ public class Lexer {
                     tryRegex(rBoolConst, BOOLCONST) ||
                     tryKeywordOrIdentifier();
             if (!ok) {
-                throw new IllegalArgumentException("Cannot tokenize at line " + line + " col " + col);
+                throw new LexerError("Cannot tokenize at line " + line + " col " + col);
             }
             
             skipWhitespace();

@@ -1,6 +1,7 @@
 package minicompiler;
 
 import minicompiler.ast.*;
+import minicompiler.errors.ParseError;
 import minicompiler.types.IntType;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -83,7 +84,7 @@ public class ParserTest {
         assertEquals(outer, actual);
     }
     
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected=ParseError.class)
     public void testJunkAtEndOfInput() {
         tokenizeAndParseStatement("x := 3; foobar x y z");
     }
