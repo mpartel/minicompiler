@@ -1,4 +1,4 @@
-package minicompiler;
+package minicompiler.integration;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class IntegrationTest {
+public class ExamplesIT {
     private static File inputFile;
     private static File outputFile;
     
