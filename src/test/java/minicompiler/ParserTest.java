@@ -8,14 +8,14 @@ import org.junit.Test;
 public class ParserTest {
     @Test
     public void testSimpleMultiplication() {
-        Expr actual = parser("3 * 4").parseExpr();
+        Expr actual = tokenizeAndParseExpr("3 * 4");
         Expr expected = new BinaryOp(new IntConst(3), "*", new IntConst(4));
         assertEquals(expected, actual);
     }
     
     @Test
     public void testMathOperationNesting1() {
-        Expr actual = parser("x + 3 * -y").parseExpr();
+        Expr actual = tokenizeAndParseExpr("x + 3 * -y");
         Expr left = new Var("x");
         Expr right = new BinaryOp(new IntConst(3), "*", new UnaryOp("-", new Var("y")));
         Expr expected = new BinaryOp(left, "+", right);
@@ -24,7 +24,7 @@ public class ParserTest {
     
     @Test
     public void testMathOperationNesting2() {
-        Expr actual = parser("x * 3 - -y").parseExpr();
+        Expr actual = tokenizeAndParseExpr("x * 3 - -y");
         Expr left = new BinaryOp(new Var("x"), "*", new IntConst(3));
         Expr right = new UnaryOp("-", new Var("y"));
         Expr expected = new BinaryOp(left, "-", right);
@@ -33,12 +33,12 @@ public class ParserTest {
     
     @Test
     public void testWhileStatement() {
-        Statement actual = parser(
+        Statement actual = tokenizeAndParseStatement(
                 "{\n" +
                 "  x : int := 0;\n" +
                 "  while x <= 3 do { x := x + 1; }\n" +
                 "}"
-                ).parseCompletely();
+                );
         Statement init = new Declaration("x", IntType.instance, new IntConst(0));
         Expr head = new BinaryOp(new Var("x"), "<=", new IntConst(3));
         Statement body = new Block(new Assignment("x", new BinaryOp(new Var("x"), "+", new IntConst(1))));
@@ -49,7 +49,7 @@ public class ParserTest {
     
     @Test
     public void testWhileStatementWithParens() {
-        Statement actual = parser("while (x < 3) do {}").parseCompletely();
+        Statement actual = tokenizeAndParseStatement("while (x < 3) do {}");
         Expr head = new BinaryOp(new Var("x"), "<", new IntConst(3));
         Statement body = new Block();
         Statement expected = new WhileLoop(head, body);
@@ -58,7 +58,7 @@ public class ParserTest {
     
     @Test
     public void testSimpleIfStatement() {
-        Statement actual = parser("if x <> 0 then print(x);").parseCompletely();
+        Statement actual = tokenizeAndParseStatement("if x <> 0 then print(x);");
         Expr condition = new BinaryOp(new Var("x"), "<>", new IntConst(0));
         Statement thenClause = new FunctionCall("print", new Var("x"));
         Statement expected = new IfStatement(condition, thenClause);
@@ -67,7 +67,7 @@ public class ParserTest {
     
     @Test
     public void testIfElse() {
-        Statement actual = parser("if x <> 0 then print(x); else print(42);").parseCompletely();
+        Statement actual = tokenizeAndParseStatement("if x <> 0 then print(x); else print(42);");
         Expr condition = new BinaryOp(new Var("x"), "<>", new IntConst(0));
         Statement thenClause = new FunctionCall("print", new Var("x"));
         Statement elseClause = new FunctionCall("print", new IntConst(42));
@@ -77,7 +77,7 @@ public class ParserTest {
     
     @Test
     public void testNestedIfElse() {
-        Statement actual = parser("if x then if y then 1; else 2; else 3;").parseCompletely();
+        Statement actual = tokenizeAndParseStatement("if x then if y then 1; else 2; else 3;");
         Statement inner = new IfStatement(new Var("y"), new IntConst(1), new IntConst(2));
         Statement outer = new IfStatement(new Var("x"), inner, new IntConst(3));
         assertEquals(outer, actual);
@@ -85,10 +85,14 @@ public class ParserTest {
     
     @Test(expected=IllegalArgumentException.class)
     public void testJunkAtEndOfInput() {
-        parser("x := 3; foobar x y z").parseCompletely();
+        tokenizeAndParseStatement("x := 3; foobar x y z");
     }
     
-    private Parser parser(String input) {
-        return new Parser(new Lexer().tokenize(input));
+    private Statement tokenizeAndParseStatement(String input) {
+        return Parser.parseStatement(Lexer.tokenize(input));
+    }
+    
+    private Expr tokenizeAndParseExpr(String input) {
+        return Parser.parseExpr(Lexer.tokenize(input));
     }
 }

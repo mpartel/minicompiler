@@ -40,6 +40,7 @@ public class Main {
         }
         
         Compiler.compile(reader, writer);
+        
         writer.close();
         reader.close();
     }

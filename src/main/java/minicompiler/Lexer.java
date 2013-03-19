@@ -7,6 +7,12 @@ import java.util.regex.Pattern;
 import static minicompiler.Token.Type.*;
 
 public class Lexer {
+    public static ArrayList<Token> tokenize(String input) {
+        Lexer lexer = new Lexer(input);
+        lexer.tokenize();
+        return lexer.result;
+    }
+    
     private static final Pattern rIntConst = Pattern.compile("[0-9]+");
     private static final Pattern rBoolConst = Pattern.compile("true|false");
     private static final Pattern rIdentifier = Pattern.compile("[a-zA-Z_][a-zA-Z0-9_]*");
@@ -25,14 +31,12 @@ public class Lexer {
     private String input;
     private int line;
     private int col;
-    
-    public ArrayList<Token> tokenize(String input) {
+
+    private Lexer(String input) {
         this.result = new ArrayList<Token>();
         this.input = input;
         this.line = 1;
         this.col = 1;
-        tokenize();
-        return result;
     }
     
     private void tokenize() {

@@ -1,7 +1,6 @@
 package minicompiler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import minicompiler.ast.Statement;
 import minicompiler.ir.*;
 import org.junit.Test;
@@ -72,10 +71,8 @@ public class IrGeneratorTest {
     }
 
     private IrCommand[] generate(String sourceCode) {
-        ArrayList<Token> tokens = new Lexer().tokenize(sourceCode);
-        Statement stmt = new Parser(tokens).parseStatement();
-        IrGenerator gen = new IrGenerator();
-        stmt.accept(gen);
-        return gen.getOutput().toArray(new IrCommand[0]);
+        ArrayList<Token> tokens = Lexer.tokenize(sourceCode);
+        Statement stmt = Parser.parseStatement(tokens);
+        return IrGenerator.generate(stmt).toArray(new IrCommand[0]);
     }
 }

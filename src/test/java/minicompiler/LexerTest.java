@@ -3,20 +3,12 @@ package minicompiler;
 import java.util.List;
 import static minicompiler.Token.Type.*;
 import static org.junit.Assert.*;
-import org.junit.Before;
 import org.junit.Test;
 
 public class LexerTest {
-    private Lexer lexer;
-    
-    @Before
-    public void setUp() {
-        lexer = new Lexer();
-    }
-    
     @Test
     public void testLexer() {
-        List<Token> result = lexer.tokenize(
+        List<Token> result = Lexer.tokenize(
                 "x: int := 35;\n" +
                 "while (x <= 123)\n" +
                 "{ iffy }\n"

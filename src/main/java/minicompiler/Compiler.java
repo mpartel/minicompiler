@@ -14,19 +14,14 @@ public class Compiler {
     public static void compile(Reader sourceCodeReader, Writer asmOutput) throws IOException {
         String sourceCode = StreamUtils.readAll(sourceCodeReader);
         
-        //TODO: clean up the APIs of the compiler phases.
+        ArrayList<Token> tokens = Lexer.tokenize(sourceCode);
         
-        ArrayList<Token> tokens = new Lexer().tokenize(sourceCode);
+        Statement stmt = Parser.parseStatement(tokens);
         
-        Parser parser = new Parser(tokens);
-        Statement stmt = parser.parseCompletely();
-        
-        IrGenerator irGen = new IrGenerator();
-        stmt.accept(irGen);
-        
-        List<IrCommand> intermediateRepresentation = irGen.getOutput();
+        List<IrCommand> intermediateRepresentation = IrGenerator.generate(stmt);
         
         List<String> asmLines = new ArrayList<String>();
+        // Add program entry point, call to main and exit with exit code 0.
         asmLines.add(".globl _start");
         asmLines.add(".type _start, @function");
         asmLines.add(".text");
@@ -47,5 +42,6 @@ public class Compiler {
             asmOutput.write(line);
             asmOutput.write('\n');
         }
+        asmOutput.flush();
     }
 }

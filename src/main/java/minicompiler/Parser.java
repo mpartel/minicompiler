@@ -9,11 +9,25 @@ import minicompiler.types.IntType;
 import minicompiler.types.Type;
 
 public class Parser {
+    public static Statement parseStatement(ArrayList<Token> input) {
+        Parser parser = new Parser(input);
+        Statement stmt = parser.parseStatement();
+        parser.consume(EOF);
+        return stmt;
+    }
+    
+     public static Expr parseExpr(ArrayList<Token> input) {
+        Parser parser = new Parser(input);
+        Expr stmt = parser.parseExpr();
+        parser.consume(EOF);
+        return stmt;
+    }
+    
     private ArrayList<Token> input;
     private int inputIndex;
     private Token eof;
 
-    public Parser(ArrayList<Token> input) {
+    private Parser(ArrayList<Token> input) {
         this.input = input;
         this.inputIndex = 0;
         if (input.isEmpty()) {
@@ -24,13 +38,7 @@ public class Parser {
         }
     }
     
-    public Statement parseCompletely() {
-        Statement s = parseStatement();
-        consume(EOF);
-        return s;
-    }
-    
-    public Statement parseStatement() {
+    private Statement parseStatement() {
         Token first = peek();
         Token second = peekAtOffset(1);
         if (first.type == LBRACE) {
@@ -107,7 +115,7 @@ public class Parser {
         return assignment;
     }
     
-    public Expr parseExpr() {
+    private Expr parseExpr() {
         Expr left = parseSubfactor();
         Token second = peek();
         while (!looksLikeExprEnd(second)) {
