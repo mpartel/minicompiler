@@ -32,17 +32,34 @@
                 <version>1.2.1</version>
                 <executions>
                     <execution>
+                        <id>build-stdlib</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <executable>make</executable>
+                            <workingDirectory>stdlib</workingDirectory>
+                        </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>clean-stdlib</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>make</executable>
+                            <arguments>
+                                <argument>clean</argument>
+                            </arguments>
+                            <workingDirectory>stdlib</workingDirectory>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <executable>make</executable>
-                    <workingDirectory>stdlib</workingDirectory>
-                </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
