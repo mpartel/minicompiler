@@ -14,21 +14,11 @@ import minicompiler.types.StdlibTypes;
 public class Compiler {
     public static void compile(Reader sourceCodeReader, Writer asmOutput) throws IOException {
         String sourceCode = StreamUtils.readAll(sourceCodeReader);
-        
         ArrayList<Token> tokens = Lexer.tokenize(sourceCode);
-        
         Statement stmt = Parser.parseStatement(tokens);
-        
         TypeChecker.checkTypes(stmt, StdlibTypes.getTypes());
-        
-        List<IrCommand> intermediateRepresentation = IrGenerator.generate(stmt);
-        
-        List<String> asmLines = IA32CodeGen.generateAsmProgram(intermediateRepresentation);
-        
-        for (String line : asmLines) {
-            asmOutput.write(line);
-            asmOutput.write('\n');
-        }
-        asmOutput.flush();
+        List<IrCommand> irCommands = IrGenerator.generate(stmt);
+        List<String> asmLines = IA32CodeGen.generateAsmProgram(irCommands);
+        StreamUtils.writeLines(asmLines, asmOutput);
     }
 }
