@@ -1,8 +1,8 @@
 package minicompiler.ir;
 
-import com.google.common.base.Joiner;
 import java.util.Arrays;
 import java.util.List;
+import minicompiler.misc.StringUtils;
 
 public class IrCall extends IrCommand {
     public final String assignedVar;
@@ -49,6 +49,6 @@ public class IrCall extends IrCommand {
 
     @Override
     public String toString() {
-        return assignedVar + " := " + functionName + "(" + Joiner.on(", ").join(args) + ")";
+        return assignedVar + " := " + functionName + "(" + StringUtils.join(args, ", ") + ")";
     }
 }

@@ -36,8 +36,8 @@ public class Lexer {
     }
     
     private void tokenize() {
+        skipWhitespace();
         while (!input.isEmpty()) {
-            skipWhitespace();
             boolean ok =
                     tryTok("(", LPAREN) || tryTok(")", RPAREN) ||
                     tryTok("{", LBRACE) || tryTok("}", RBRACE) ||
@@ -55,8 +55,10 @@ public class Lexer {
                     tryRegex(rBoolConst, BOOLCONST) ||
                     tryKeywordOrIdentifier();
             if (!ok) {
-                throw new IllegalArgumentException("Cannot tokenize: " + input);
+                throw new IllegalArgumentException("Cannot tokenize at line " + line + " col " + col);
             }
+            
+            skipWhitespace();
         }
     }
     

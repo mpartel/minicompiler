@@ -6,11 +6,6 @@ public class IrIntConst extends IrRValue {
     public IrIntConst(int value) {
         this.value = value;
     }
-
-    @Override
-    public void accept(IrVisitor visitor) {
-        visitor.visit(this);
-    }
     
     @Override
     public boolean equals(Object obj) {

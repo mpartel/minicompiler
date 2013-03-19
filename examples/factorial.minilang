@@ -1,0 +1,9 @@
+{
+  n : int := 7;
+  x : int := 1;
+  while n > 1 do {
+    x := x * n;
+    n := n - 1;
+  }
+  printInt(x);
+}

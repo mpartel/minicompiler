@@ -1,0 +1,5 @@
+{
+    printInt(1);
+    printInt(2);
+    printInt(1 + 2);
+}

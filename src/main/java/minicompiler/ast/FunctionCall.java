@@ -1,8 +1,8 @@
 package minicompiler.ast;
 
-import com.google.common.base.Joiner;
 import java.util.Arrays;
 import java.util.List;
+import minicompiler.misc.StringUtils;
 
 public class FunctionCall implements Expr {
     public final String functionName;
@@ -40,6 +40,6 @@ public class FunctionCall implements Expr {
 
     @Override
     public String toString() {
-        return functionName + "(" + Joiner.on(", ").join(arguments) + ")";
+        return functionName + "(" + StringUtils.join(arguments, ", ") + ")";
     }
 }

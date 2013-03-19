@@ -1,9 +1,9 @@
 package minicompiler.ast;
 
-import com.google.common.base.Joiner;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import minicompiler.misc.StringUtils;
 
 public class Block implements Statement {
     public final List<Statement> statements;
@@ -37,6 +37,6 @@ public class Block implements Statement {
 
     @Override
     public String toString() {
-        return "{ " + Joiner.on("; ").join(statements) + " }";
+        return "{ " + StringUtils.join(statements, "; ") + " }";
     }
 }

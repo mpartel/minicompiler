@@ -8,11 +8,6 @@ public class IrVar extends IrRValue {
     }
     
     @Override
-    public void accept(IrVisitor visitor) {
-        visitor.visit(this);
-    }
-    
-    @Override
     public boolean equals(Object obj) {
         if (obj instanceof IrVar) {
             IrVar that = (IrVar)obj;

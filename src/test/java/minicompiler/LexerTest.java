@@ -19,7 +19,7 @@ public class LexerTest {
         List<Token> result = lexer.tokenize(
                 "x: int := 35;\n" +
                 "while (x <= 123)\n" +
-                "{ iffy }"
+                "{ iffy }\n"
                 );
         Token[] expected = {
             new Token(IDENTIFIER, "x", 1, 1),

@@ -1,1 +1,5 @@
 /target
+/stdlib/*.o
+/examples/*.o
+/examples/*.s
+/examples/executable-*
