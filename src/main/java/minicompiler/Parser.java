@@ -145,8 +145,6 @@ public class Parser {
         Token op = peek();
         Expr right;
         switch (op.type) {
-            case AND:
-            case OR:
             case PLUS:
             case MINUS:
                 consume();

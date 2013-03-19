@@ -2,4 +2,7 @@
   x : int := 3;
   if x > 2 then printInt(1); else printInt(0);
   if x <= 2 then printInt(1); else printInt(0);
+  
+  b : bool := x == 3;
+  if !b then printInt(1); else printInt(0);
 }

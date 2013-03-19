@@ -50,7 +50,7 @@ public class Lexer {
                     tryTok(",", COMMA) ||
                     tryTok("+", PLUS) || tryTok("-", MINUS) ||
                     tryTok("*", TIMES) || tryTok("/", DIV) ||
-                    tryTok("&&", AND) || tryTok("||", OR) || tryTok("!", NOT) ||
+                    tryTok("!", NOT) ||
                     tryTok(":=", ASSIGN) ||
                     tryTok(":", COLON) ||
                     tryTok("==", EQ) || tryTok("<>", NEQ) ||

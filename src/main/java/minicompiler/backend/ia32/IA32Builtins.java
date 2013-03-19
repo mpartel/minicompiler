@@ -20,7 +20,7 @@ class IA32Builtins {
         builtins.put("==", binaryComparisonBuiltin("cmove"));
         builtins.put("!=", binaryComparisonBuiltin("cmovne"));
         
-        //TODO: &&, ||, ! (or implement short-circuiting in IrGenerator)
+        builtins.put("!", notOperatorBuiltin());
     }
     
     private static IA32Builtin binaryArithmeticBuiltin(final String asmOp) {
@@ -46,6 +46,19 @@ class IA32Builtins {
                     "movl " + symTab.rvalueToAsm(args[0]) + ", %ecx",
                     "cmpl " + symTab.rvalueToAsm(args[1]) + ", %ecx",
                     cmovOp + " %ebx, %eax",
+                };
+            }
+        };
+    }
+    
+    private static IA32Builtin notOperatorBuiltin() {
+        return new IA32Builtin(1) {
+            @Override
+            public String[] generate(IA32SymbolTable symTab, IrRValue[] args) {
+                return new String[] {
+                    "movl " + symTab.rvalueToAsm(args[0]) + ", %eax",
+                    "xorl %eax, %eax",
+                    "movl %eax, " + symTab.rvalueToAsm(args[0]),
                 };
             }
         };

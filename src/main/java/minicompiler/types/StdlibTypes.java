@@ -20,6 +20,8 @@ public class StdlibTypes {
             types.put(op, ty);
         }
         
+        types.put("!", new FunctionType(tyList(BoolType.instance), BoolType.instance));
+        
         types.put("printInt", new FunctionType(tyList(IntType.instance), VoidType.instance));
     }
     

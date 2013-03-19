@@ -7,7 +7,7 @@ public class Token {
         SEMICOLON,
         COMMA,
         PLUS, MINUS, TIMES, DIV,
-        AND, OR, NOT,
+        NOT,
         ASSIGN,
         COLON,
         EQ, NEQ, // ==, <>
