@@ -48,7 +48,7 @@ int readInt()
     int negative = 0;
     char ch;
 
-    if (read(1, &ch, 1) != 1) {
+    if (read(0, &ch, 1) != 1) {
         exit(1);
     }
 
@@ -62,7 +62,7 @@ int readInt()
     }
 
     while (1) {
-        if (read(1, &ch, 1) != 1) {
+        if (read(0, &ch, 1) != 1) {
             exit(1);
         }
         if (isdigit(ch)) {
