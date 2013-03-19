@@ -1,10 +1,8 @@
 #!/bin/sh -e
 cd `dirname "$0"`
 
-if [ -z "$1" ]; then
-    for file in *.minilang; do
-        ./compile-and-run.sh $file
-    done
+if [ -z "$1" -o "$1" = "-h" -o "$1" = "--help" ]; then
+    echo "Usage: $0 program.mini"
     exit 0
 fi
 
@@ -15,7 +13,7 @@ if [ ! -e "$SRC" ]; then
     exit 1
 fi
 
-BASENAME=`basename "$SRC" .minilang`
+BASENAME=`basename "$SRC" .mini`
 
 echo "Compiling"
 java -jar ../target/minicompiler-dev.jar "$SRC" > "$BASENAME.s"
