@@ -23,4 +23,4 @@ echo "Linking"
 ld -melf_i386 -o "executable-$BASENAME" "$BASENAME.o" ../stdlib/stdlib.o ../stdlib/syscalls.o
 
 echo "Running"
-./executable-"$BASENAME"
+exec ./executable-"$BASENAME"

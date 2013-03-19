@@ -23,6 +23,7 @@ public class StdlibTypes {
         types.put("!", new FunctionType(tyList(BoolType.instance), BoolType.instance));
         
         types.put("printInt", new FunctionType(tyList(IntType.instance), VoidType.instance));
+        types.put("readInt", new FunctionType(tyList(), IntType.instance));
     }
     
     private static List<Type> tyList(Type... types) {
