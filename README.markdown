@@ -29,7 +29,8 @@ The standard functions `readInt` and `printInt` are built to use Linux syscalls,
 Compilation stages
 ---------------------------------
 
-The compiler is split into stages like any compiler textbook would tell you to do.
+The [**compiler**](https://github.com/mpartel/minicompiler/blob/master/src/main/java/minicompiler/Compiler.java)
+is split into stages like any compiler textbook would tell you to do.
 
 First, the [**lexer**](https://github.com/mpartel/minicompiler/blob/master/src/main/java/minicompiler/Lexer.java)
 reads source code and outputs a list of *tokens*.
@@ -97,3 +98,18 @@ To build it on the command line you need [Maven](http://maven.apache.org/). Simp
 To run the compiler and get assembly language output, do `java -jar target/minicompiler-dev.jar inputfile`.
 
 To compile and link the example files, use `examples/compile.sh`.
+
+Advice
+------
+
+Here are a few recommendations if you'd like to build your own compiler.
+
+- Consider using [ANTLR](http://www.antlr.org/) or some other parser generator or parser combinator library.
+- Use [LLVM](http://llvm.org/) as your backend or IR. It gives you lots of optimizations for free and is quite portable. Alternatively you could [generate Java bytecode](http://asm.ow2.org/).
+- Functional languages with pattern matching like Haskell, ML and Scala are excellent for writing compilers, since compilers involve lots of recursive algorithms and datastructures. Many even come with a parser combinator library. Pure Java is serviceable but a little tedious, as can be seen from the verbose AST classes and the need for the Visitor pattern in this project.
+
+Recommended reading
+-------------------
+
+- [Types and Programming Languages](http://www.cis.upenn.edu/~bcpierce/tapl/) is an excellent introduction to type systems.
+- [Compilers: Principles, Techniques, and Tools](http://dragonbook.stanford.edu/) (aka. the dragon book) has both an approachable introduction and lots of in-depth information on all of the traditional compiler stages.
