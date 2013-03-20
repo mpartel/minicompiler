@@ -51,6 +51,13 @@ public class ExamplesIT {
         assertArrayEquals(new int[] { -5 }, runExample("sum", 2, -7));
     }
     
+    @Test
+    public void testCollatz() throws Exception {
+        compileExample("collatz");
+        assertArrayEquals(new int[] { 6, 3, 10, 5, 16, 8, 4, 2, 1 }, runExample("collatz", 6));
+        assertArrayEquals(new int[] { 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1 }, runExample("collatz", 11));
+    }
+    
     private void compileExample(String name) throws Exception {
         String command = "./compile.sh " + name + ".mini";
         Runtime rt = Runtime.getRuntime();

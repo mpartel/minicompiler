@@ -181,6 +181,7 @@ public class Parser {
         switch (op.type) {
             case TIMES:
             case DIV:
+            case MOD:
                 consume();
                 right = parseSubfactor();
                 break;

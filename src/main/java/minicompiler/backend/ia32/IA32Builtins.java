@@ -11,7 +11,8 @@ class IA32Builtins {
         builtins.put("+", binaryArithmeticBuiltin("addl"));
         builtins.put("-", binaryArithmeticBuiltin("subl"));
         builtins.put("*", binaryArithmeticBuiltin("imull"));
-        builtins.put("/", binaryArithmeticBuiltin("idivl")); // FIXME: works differently
+        builtins.put("/", divOperatorBuiltin());
+        builtins.put("%", modOperatorBuiltin());
         
         builtins.put("<", binaryComparisonBuiltin("cmovl"));
         builtins.put(">", binaryComparisonBuiltin("cmovg"));
@@ -57,8 +58,36 @@ class IA32Builtins {
             public String[] generate(IA32SymbolTable symTab, IrRValue[] args) {
                 return new String[] {
                     "movl " + symTab.rvalueToAsm(args[0]) + ", %eax",
-                    "xorl %eax, %eax",
-                    "movl %eax, " + symTab.rvalueToAsm(args[0]),
+                    "xorl %eax, %eax"
+                };
+            }
+        };
+    }
+    
+    private static IA32Builtin divOperatorBuiltin() {
+        return new IA32Builtin(2) {
+            @Override
+            public String[] generate(IA32SymbolTable symTab, IrRValue[] args) {
+                return new String[] {
+                    "movl " + symTab.rvalueToAsm(args[0]) + ", %eax",
+                    "movl " + symTab.rvalueToAsm(args[1]) + ", %ebx",
+                    "cltd",
+                    "idivl %ebx"
+                };
+            }
+        };
+    }
+    
+    private static IA32Builtin modOperatorBuiltin() {
+        return new IA32Builtin(2) {
+            @Override
+            public String[] generate(IA32SymbolTable symTab, IrRValue[] args) {
+                return new String[] {
+                    "movl " + symTab.rvalueToAsm(args[0]) + ", %eax",
+                    "movl " + symTab.rvalueToAsm(args[1]) + ", %ebx",
+                    "cltd",
+                    "idivl %ebx",
+                    "movl %edx, %eax"
                 };
             }
         };

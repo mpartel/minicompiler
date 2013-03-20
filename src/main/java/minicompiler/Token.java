@@ -6,7 +6,7 @@ public class Token {
         LBRACE, RBRACE,
         SEMICOLON,
         COMMA,
-        PLUS, MINUS, TIMES, DIV,
+        PLUS, MINUS, TIMES, DIV, MOD,
         NOT,
         ASSIGN,
         COLON,

@@ -10,7 +10,7 @@ public class StdlibTypes {
     private static final HashMap<String, Type> types = new HashMap<String, Type>();
     
     static {
-        for (String op : new String[] { "+", "-", "*", "/" }) {
+        for (String op : new String[] { "+", "-", "*", "/", "%" }) {
             Type ty = new FunctionType(tyList(IntType.instance, IntType.instance), IntType.instance);
             types.put(op, ty);
         }

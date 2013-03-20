@@ -49,7 +49,7 @@ public class Lexer {
                     tryTok(";", SEMICOLON) ||
                     tryTok(",", COMMA) ||
                     tryTok("+", PLUS) || tryTok("-", MINUS) ||
-                    tryTok("*", TIMES) || tryTok("/", DIV) ||
+                    tryTok("*", TIMES) || tryTok("/", DIV) || tryTok("%", MOD) ||
                     tryTok("!", NOT) ||
                     tryTok(":=", ASSIGN) ||
                     tryTok(":", COLON) ||
