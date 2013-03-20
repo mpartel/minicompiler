@@ -1,0 +1,18 @@
+# The AST for `if x + y < 3 then printInt(3);`
+digraph {
+    graph [ordering="out"]
+    lt [label="<"]
+    plus [label="+"]
+    three1 [label="3"]
+    three2 [label="3"]
+
+    if -> lt
+    lt -> plus
+    plus -> x
+    plus -> y
+    lt -> three1
+
+    if -> call
+    call -> printInt
+    call -> three2
+}
