@@ -31,7 +31,8 @@ Compilation stages
 
 The compiler is split into stages like any compiler textbook would tell you to do.
 
-First, the *lexer* reads source code and outputs a list of *tokens*.
+First, the [**lexer**](https://github.com/mpartel/minicompiler/blob/master/src/main/java/minicompiler/Lexer.java)
+reads source code and outputs a list of *tokens*.
 
     ArrayList<Token> tokens = Lexer.tokenize(sourceCode);
 
@@ -39,7 +40,8 @@ A token is a piece of text that the language should consider one syntactical "th
 For instance, a variable name like `foo` is a single token, a parenthesis `(` is a token
 and the operator `<=` is also a token.
 
-Now the *parser* reads the stream of tokens and produces an abstract syntax tree (AST).
+Now the [**parser**](https://github.com/mpartel/minicompiler/blob/master/src/main/java/minicompiler/Parser.java)
+reads the stream of tokens and produces an abstract syntax tree (AST).
 
     Statement stmt = Parser.parseStatement(tokens);
 
@@ -47,14 +49,15 @@ For instance, the statement `if x + y < 3 then printInt(3);` is parsed into the 
 
 <img src="https://github.com/mpartel/minicompiler/raw/master/doc/ast-example.png" />
 
-Next, the AST is traversed by the *type checker*.
+Next, the AST is traversed by the [**type checker**](https://github.com/mpartel/minicompiler/blob/master/src/main/java/minicompiler/TypeChecker.java).
 
     TypeChecker.checkTypes(stmt, StdlibTypes.getTypes());
 
 The type checker makes sure that variables are declared before use,
 that variable scopes are respected, that expressions in if-statement conditions are boolean etc.
 
-After type checking, the AST is transformed into a high-level pseudo-assembly *intermediate representation* (IR)
+After type checking, the AST is transformed into a high-level pseudo-assembly
+[**intermediate representation**](https://github.com/mpartel/minicompiler/blob/master/src/main/java/minicompiler/IrGenerator.java) (IR).
 
     List<IrCommand> irCommands = IrGenerator.generate(stmt);
 
@@ -70,7 +73,8 @@ would be compiled into the following kind of intermediate representation.
         ...
 
 This is reasonably close to the final assembly language we want to produce.
-The *code generator* produces assembly from the IR.
+The [**code generator**](https://github.com/mpartel/minicompiler/blob/master/src/main/java/minicompiler/backend/ia32/IA32CodeGen.java)
+produces assembly from the IR.
 
     List<String> asmLines = IA32CodeGen.generateAsmProgram(irCommands);
 
