@@ -33,6 +33,15 @@ public class ParserTest {
     }
     
     @Test
+    public void testMathAndComparison() {
+        Expr actual = tokenizeAndParseExpr("x * 3 < x + 3");
+        Expr left = new BinaryOp(new Var("x"), "*", new IntConst(3));
+        Expr right = new BinaryOp(new Var("x"), "+", new IntConst(3));
+        Expr expected = new BinaryOp(left, "<", right);
+        assertEquals(expected, actual);
+    }
+    
+    @Test
     public void testWhileStatement() {
         Statement actual = tokenizeAndParseStatement(
                 "{\n" +

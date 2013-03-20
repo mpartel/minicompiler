@@ -120,7 +120,7 @@ public class Parser {
         Expr left = parseSubfactor();
         Token second = peek();
         while (!looksLikeExprEnd(second)) {
-            left = parseTerm(left);
+            left = parseComparison(left);
             second = peek();
         }
         return left;
@@ -139,6 +139,25 @@ public class Parser {
             default:
                 return false;
         }
+    }
+    
+    private Expr parseComparison(Expr left) {
+        Token op = peek();
+        Expr right;
+        switch (op.type) {
+            case EQ:
+            case NEQ:
+            case LT:
+            case GT:
+            case LTE:
+            case GTE:
+                consume();
+                right = parseExpr();
+                break;
+            default:
+                return parseTerm(left);
+        }
+        return new BinaryOp(left, op.text, right);
     }
     
     private Expr parseTerm(Expr left) {
@@ -160,12 +179,6 @@ public class Parser {
         Token op = peek();
         Expr right;
         switch (op.type) {
-            case EQ:
-            case NEQ:
-            case LT:
-            case GT:
-            case LTE:
-            case GTE:
             case TIMES:
             case DIV:
                 consume();
