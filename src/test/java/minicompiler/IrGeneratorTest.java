@@ -71,7 +71,7 @@ public class IrGeneratorTest {
     }
 
     private IrCommand[] generate(String sourceCode) {
-        ArrayList<Token> tokens = Lexer.tokenize(sourceCode);
+        ArrayList<Token> tokens = Tokenizer.tokenize(sourceCode);
         Statement stmt = Parser.parseStatement(tokens);
         return IrGenerator.generate(stmt).toArray(new IrCommand[0]);
     }

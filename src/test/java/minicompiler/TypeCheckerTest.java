@@ -52,12 +52,12 @@ public class TypeCheckerTest {
     }
     
     private void shouldCheck(String code) {
-        Statement stmt = Parser.parseStatement(Lexer.tokenize(code));
+        Statement stmt = Parser.parseStatement(Tokenizer.tokenize(code));
         TypeChecker.checkTypes(stmt, StdlibTypes.getTypes());
     }
     
     private void shouldFail(String code) {
-        Statement stmt = Parser.parseStatement(Lexer.tokenize(code));
+        Statement stmt = Parser.parseStatement(Tokenizer.tokenize(code));
         try {
             TypeChecker.checkTypes(stmt, StdlibTypes.getTypes());
         } catch (TypeError e) {

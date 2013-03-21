@@ -99,10 +99,10 @@ public class ParserTest {
     }
     
     private Statement tokenizeAndParseStatement(String input) {
-        return Parser.parseStatement(Lexer.tokenize(input));
+        return Parser.parseStatement(Tokenizer.tokenize(input));
     }
     
     private Expr tokenizeAndParseExpr(String input) {
-        return Parser.parseExpr(Lexer.tokenize(input));
+        return Parser.parseExpr(Tokenizer.tokenize(input));
     }
 }

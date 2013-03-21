@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static minicompiler.Token.Type.*;
-import minicompiler.errors.LexerError;
+import minicompiler.errors.TokenizerError;
 
-public class Lexer {
+public class Tokenizer {
     public static ArrayList<Token> tokenize(String input) {
-        Lexer lexer = new Lexer(input);
-        lexer.tokenize();
-        return lexer.result;
+        Tokenizer tokenizer = new Tokenizer(input);
+        tokenizer.tokenize();
+        return tokenizer.result;
     }
     
     private static final Pattern rIntConst = Pattern.compile("[0-9]+");
@@ -33,7 +33,7 @@ public class Lexer {
     private int line;
     private int col;
 
-    private Lexer(String input) {
+    private Tokenizer(String input) {
         this.result = new ArrayList<Token>();
         this.input = input;
         this.line = 1;
@@ -60,7 +60,7 @@ public class Lexer {
                     tryRegex(rBoolConst, BOOLCONST) ||
                     tryKeywordOrIdentifier();
             if (!ok) {
-                throw new LexerError("Cannot tokenize at line " + line + " col " + col);
+                throw new TokenizerError("Cannot tokenize at line " + line + " col " + col);
             }
             
             skipWhitespace();
