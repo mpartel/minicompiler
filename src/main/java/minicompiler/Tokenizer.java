@@ -7,6 +7,18 @@ import java.util.regex.Pattern;
 import static minicompiler.Token.Type.*;
 import minicompiler.errors.TokenizerError;
 
+/**
+ * Converts source code into a list of tokens.
+ * 
+ * <p>
+ * A token a single syntactical unit such as ':=', 'then', 'myVariable', '123', '(', etc.
+ * 
+ * <p>
+ * This tokenizer works by repeatedly looking at the beginning of remaining input,
+ * discarding any whitespace and then seeing if the input starts with any known token.
+ * Most tokens are constant strings like 'then' or '(', but some tokens, such
+ * as integer constants, are recognized by regular expressions.
+ */
 public class Tokenizer {
     public static ArrayList<Token> tokenize(String input) {
         Tokenizer tokenizer = new Tokenizer(input);

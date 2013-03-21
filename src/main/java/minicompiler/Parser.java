@@ -9,6 +9,53 @@ import minicompiler.types.BoolType;
 import minicompiler.types.IntType;
 import minicompiler.types.Type;
 
+/**
+ * Converts a list of tokens into an abstract syntax tree (AST).
+ * 
+ * <p>
+ * This parser is a hand-written recursive descent parser.
+ * It parses statements by looking at the first few tokens.
+ * For instance, if the first token is a 'while' then it knows that what
+ * follows must be 'while [some-expression] do [some-statement]'.
+ * It consumes the 'while' token, calls 'parseExpr', consumes the 'do'
+ * token and then calls 'parseStatement'.
+ * 
+ * <p>
+ * Parsing expressions is a little trickier because of operator precedence.
+ * Let's see how parsing '3 + 4 * 5 + 6' works.
+ * 
+ * <p>
+ * Let's define 'term', 'factor' and 'simple factor' (recall polynomials).
+ * All of these are types of expressions.
+ * <ul>
+ *   <li>A <em>simple factor</em>
+ *       can be (among other things) an integer constant.
+ *   <li>A <em>factor</em>
+ *       can be a simple factor,
+ *       or a smaller factor followed by a '*' or '/', and then a simple factor.
+ *   <li>A <em>term</em>
+ *       can be either a factor,
+ *       or a smaller term followed by a '+' or '-', and then a factor.
+ * </ul>
+ * 
+ * <p>
+ * We can say the same thing with the following notation:<br>
+ * <pre>
+ *   simple_factor ::= [0-9]+
+ *   factor ::= simple_factor | factor '*' simple_factor | factor '/' simple_factor
+ *   term ::= factor | term '+' factor | term '-' factor
+ * </pre>
+ * 
+ * <p>
+ * To parse a term we first recursively parse its left factor.
+ * Then we check to see if the next operator is + or -.
+ * If it's not, we return just the left factor.
+ * If it is + or -, we parse the right side too and return 'left +/- right'.
+ * 
+ * <p>
+ * Parsing a factor works in completely the same way,
+ * except with * and /, and it recursively parses simple factors.
+ */
 public class Parser {
     public static Statement parseStatement(ArrayList<Token> input) {
         Parser parser = new Parser(input);
@@ -152,7 +199,7 @@ public class Parser {
     }
     
     private Expr parseFactor() {
-        Expr left = parseSubfactor();
+        Expr left = parseSimpleFactor();
         while (true) {
             Token op = peek();
             switch (op.type) {
@@ -160,7 +207,7 @@ public class Parser {
                 case DIV:
                 case MOD:
                     consume();
-                    Expr right = parseSubfactor();
+                    Expr right = parseSimpleFactor();
                     left = new BinaryOp(left, op.text, right);
                     break;
                 default:
@@ -169,7 +216,7 @@ public class Parser {
         }
     }
     
-    private Expr parseSubfactor() {
+    private Expr parseSimpleFactor() {
         Token t = consume();
         if (t.type == LPAREN) {
             Expr e = parseExpr();
@@ -177,8 +224,8 @@ public class Parser {
             return e;
         } else {
             switch (t.type) {
-                case MINUS: return new UnaryOp("-", parseSubfactor());
-                case NOT: return new UnaryOp("!", parseSubfactor());
+                case MINUS: return new UnaryOp("-", parseSimpleFactor());
+                case NOT: return new UnaryOp("!", parseSimpleFactor());
                 case INTCONST: return new IntConst(Integer.parseInt(t.text));
                 case BOOLCONST: return new BoolConst(Boolean.parseBoolean(t.text));
                 case IDENTIFIER:

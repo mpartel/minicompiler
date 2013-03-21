@@ -86,6 +86,15 @@ public class ParserTest {
     }
     
     @Test
+    public void testPlusTimesPlus() {
+        Expr actual = tokenizeAndParseExpr("3 + 4 * 5 + 6");
+        Expr times = new BinaryOp(new IntConst(4), "*", new IntConst(5));
+        Expr innerPlus = new BinaryOp(new IntConst(3), "+", times);
+        Expr expected = new BinaryOp(innerPlus, "+", new IntConst(6));
+        assertEquals(expected, actual);
+    }
+    
+    @Test
     public void testNotNotNotEq() {
         Expr actual = tokenizeAndParseExpr("!!!a <> a");
         Expr left = new UnaryOp("!", new UnaryOp("!", new UnaryOp("!", new Var("a"))));

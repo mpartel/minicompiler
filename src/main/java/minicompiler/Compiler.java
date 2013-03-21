@@ -11,6 +11,9 @@ import minicompiler.ir.IrCommand;
 import minicompiler.misc.StreamUtils;
 import minicompiler.types.StdlibTypes;
 
+/**
+ * Invokes the compiler's stages in the correct order to produce assembly code from source code.
+ */
 public class Compiler {
     public static void compile(Reader sourceCodeReader, Writer asmOutput) throws IOException {
         String sourceCode = StreamUtils.readAll(sourceCodeReader);

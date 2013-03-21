@@ -6,6 +6,9 @@ import minicompiler.ast.*;
 import minicompiler.ir.*;
 import minicompiler.misc.NameMaker;
 
+/**
+ * Converts an AST into IR code.
+ */
 public class IrGenerator {
     public static List<IrCommand> generate(Statement stmt) {
         IrGeneratorAstVisitor visitor = new IrGeneratorAstVisitor();

@@ -8,6 +8,53 @@ import minicompiler.ast.*;
 import minicompiler.errors.TypeError;
 import minicompiler.types.*;
 
+/**
+ * Checks the types of an AST.
+ * 
+ * <p>
+ * It works by going through the AST recursively.
+ * 
+ * <p>
+ * Let's look how the following program is type-checked.
+ * 
+ * <pre>
+ *   {
+ *     x : int := 3 + 5;
+ *     y : bool := x;
+ *   }
+ * </pre>
+ * 
+ * <p>
+ * First we run into {@code x : int := 3 + 5;}.
+ * We need to check that the right hand side is an 'int'.
+ * 
+ * <p>
+ * We see {@code 3 + 5}. We know that a '+' expects two 'int's.
+ * We check the left and right side of the '+'.
+ * 
+ * <p>
+ * We see {@code 3} and return an 'int'.
+ * Then we see {@code 5} and return and 'int'.
+ * 
+ * <p>
+ * Back at {@code 3 + 5} we've verified that both sides are 'int'.
+ * We know that '+' always results in an 'int' so we return an 'int'.
+ * 
+ * <p>
+ * Back at {@code x : int := 3 + 5;} we've verified that the right hand side
+ * is an 'int'. We put the mapping 'x' -> 'int' into the symbol table.
+ * 
+ * <p>
+ * Now at {@code y : bool := x;} we need to check that the right hand side
+ * is a 'bool'.
+ * 
+ * <p>
+ * We see the variable {@code x} and look its type up in the symbol table.
+ * 
+ * <p>
+ * Back at {@code y : bool := x;} we see that the right hand side was not
+ * a 'bool' so we raise a type error.
+ */
 public class TypeChecker {
     public static void checkTypes(Statement statement, Map<String, Type> knownTypes) {
         TypeCheckVisitor visitor = new TypeCheckVisitor(knownTypes);
