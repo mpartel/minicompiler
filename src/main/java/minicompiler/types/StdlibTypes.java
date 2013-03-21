@@ -15,7 +15,7 @@ public class StdlibTypes {
             types.put(op, ty);
         }
         
-        for (String op : new String[] { "<", ">", "<=", ">=", "==", "!=" }) {
+        for (String op : new String[] { "<", ">", "<=", ">=", "==", "<>" }) {
             Type ty = new FunctionType(tyList(IntType.instance, IntType.instance), BoolType.instance);
             types.put(op, ty);
         }

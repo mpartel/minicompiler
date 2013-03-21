@@ -41,7 +41,7 @@ public class Parser {
     
     private Statement parseStatement() {
         Token first = peek();
-        Token second = peekAtOffset(1);
+        Token second = peekSecond();
         if (first.type == LBRACE) {
             return parseBlock();
         } else if (first.type == WHILE) {
@@ -117,33 +117,8 @@ public class Parser {
     }
     
     private Expr parseExpr() {
-        Expr left = parseSubfactor();
-        Token second = peek();
-        while (!looksLikeExprEnd(second)) {
-            left = parseComparison(left);
-            second = peek();
-        }
-        return left;
-    }
-    
-    private boolean looksLikeExprEnd(Token t) {
-        switch (t.type) {
-            case RPAREN:
-            case SEMICOLON:
-            case COMMA:
-            case THEN:
-            case ELSE:
-            case DO:
-            case EOF:
-                return true;
-            default:
-                return false;
-        }
-    }
-    
-    private Expr parseComparison(Expr left) {
+        Expr left = parseTerm();
         Token op = peek();
-        Expr right;
         switch (op.type) {
             case EQ:
             case NEQ:
@@ -152,43 +127,46 @@ public class Parser {
             case LTE:
             case GTE:
                 consume();
-                right = parseExpr();
-                break;
+                Expr right = parseTerm();
+                return new BinaryOp(left, op.text, right);
             default:
-                return parseTerm(left);
+                return left;
         }
-        return new BinaryOp(left, op.text, right);
     }
     
-    private Expr parseTerm(Expr left) {
-        Token op = peek();
-        Expr right;
-        switch (op.type) {
-            case PLUS:
-            case MINUS:
-                consume();
-                right = parseExpr();
-                break;
-            default:
-                return parseFactor(left);
+    private Expr parseTerm() {
+        Expr left = parseFactor();
+        while (true) {
+            Token op = peek();
+            switch (op.type) {
+                case PLUS:
+                case MINUS:
+                    consume();
+                    Expr right = parseFactor();
+                    left = new BinaryOp(left, op.text, right);
+                    break;
+                default:
+                    return left;
+            }
         }
-        return new BinaryOp(left, op.text, right);
     }
     
-    private Expr parseFactor(Expr left) {
-        Token op = peek();
-        Expr right;
-        switch (op.type) {
-            case TIMES:
-            case DIV:
-            case MOD:
-                consume();
-                right = parseSubfactor();
-                break;
-            default:
-                return parseSubfactor();
+    private Expr parseFactor() {
+        Expr left = parseSubfactor();
+        while (true) {
+            Token op = peek();
+            switch (op.type) {
+                case TIMES:
+                case DIV:
+                case MOD:
+                    consume();
+                    Expr right = parseSubfactor();
+                    left = new BinaryOp(left, op.text, right);
+                    break;
+                default:
+                    return left;
+            }
         }
-        return new BinaryOp(left, op.text, right);
     }
     
     private Expr parseSubfactor() {
@@ -242,6 +220,10 @@ public class Parser {
     
     private Token peek() {
         return peekAtOffset(0);
+    }
+    
+    private Token peekSecond() {
+        return peekAtOffset(1);
     }
     
     private Token peekAtOffset(int offset) {

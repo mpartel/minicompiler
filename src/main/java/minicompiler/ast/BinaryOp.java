@@ -22,6 +22,7 @@ public class BinaryOp implements Expr {
             return
                     this.getClass().equals(that.getClass()) &&
                     this.left.equals(that.left) &&
+                    this.opName.equals(that.opName) &&
                     this.right.equals(that.right);
         } else {
             return false;
