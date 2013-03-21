@@ -21,40 +21,40 @@ import minicompiler.types.Type;
  * token and then calls 'parseStatement'.
  * 
  * <p>
- * Parsing expressions is a little trickier because of operator precedence.
+ * Parsing math expressions is a little trickier because of operator precedence.
  * Let's see how parsing '3 + 4 * 5 + 6' works.
  * 
  * <p>
- * Let's define 'term', 'factor' and 'simple factor' (recall polynomials).
- * All of these are types of expressions.
+ * Let's define 'mathexpr', 'term' and 'factor' (recall polynomials).
  * <ul>
- *   <li>A <em>simple factor</em>
- *       can be (among other things) an integer constant.
  *   <li>A <em>factor</em>
- *       can be a simple factor,
- *       or a smaller factor followed by a '*' or '/', and then a simple factor.
+ *       can be (among other things) an integer constant.
  *   <li>A <em>term</em>
- *       can be either a factor,
- *       or a smaller term followed by a '+' or '-', and then a factor.
+ *       can be a factor,
+ *       or a smaller term followed by a '*' or '/', and then a factor.
+ *   <li>A <em>mathexpr</em>
+ *       can be either a term,
+ *       or a smaller mathexpr followed by a '+' or '-', and then a term.
  * </ul>
  * 
  * <p>
  * We can say the same thing with the following notation:<br>
  * <pre>
- *   simple_factor ::= [0-9]+
- *   factor ::= simple_factor | factor '*' simple_factor | factor '/' simple_factor
- *   term ::= factor | term '+' factor | term '-' factor
+ *   factor ::= [0-9]+
+ *   term ::= factor | term '*' factor | term '/' factor
+ *   mathexpr ::= term | mathexpr '+' term | mathexpr '-' term
  * </pre>
  * 
  * <p>
- * To parse a term we first recursively parse its left factor.
- * Then we check to see if the next operator is + or -.
- * If it's not, we return just the left factor.
- * If it is + or -, we parse the right side too and return 'left +/- right'.
+ * To parse a mathexpr we first recursively parse its left term.
+ * Then we check to see if the next token is + or -.
+ * If it's not, we return just the left term.
+ * If it is + or -, we parse the right side as a factor to get the
+ * AST 'left +/- right'.
  * 
  * <p>
- * Parsing a factor works in completely the same way,
- * except with * and /, and it recursively parses simple factors.
+ * Parsing a term works the same way,
+ * except with * and /, and it recursively parses factors.
  */
 public class Parser {
     public static Statement parseStatement(ArrayList<Token> input) {
@@ -164,7 +164,7 @@ public class Parser {
     }
     
     private Expr parseExpr() {
-        Expr left = parseTerm();
+        Expr left = parseMathexpr();
         Token op = peek();
         switch (op.type) {
             case EQ:
@@ -174,10 +174,27 @@ public class Parser {
             case LTE:
             case GTE:
                 consume();
-                Expr right = parseTerm();
+                Expr right = parseMathexpr();
                 return new BinaryOp(left, op.text, right);
             default:
                 return left;
+        }
+    }
+    
+    private Expr parseMathexpr() {
+        Expr left = parseTerm();
+        while (true) {
+            Token op = peek();
+            switch (op.type) {
+                case PLUS:
+                case MINUS:
+                    consume();
+                    Expr right = parseTerm();
+                    left = new BinaryOp(left, op.text, right);
+                    break;
+                default:
+                    return left;
+            }
         }
     }
     
@@ -186,8 +203,9 @@ public class Parser {
         while (true) {
             Token op = peek();
             switch (op.type) {
-                case PLUS:
-                case MINUS:
+                case TIMES:
+                case DIV:
+                case MOD:
                     consume();
                     Expr right = parseFactor();
                     left = new BinaryOp(left, op.text, right);
@@ -199,24 +217,6 @@ public class Parser {
     }
     
     private Expr parseFactor() {
-        Expr left = parseSimpleFactor();
-        while (true) {
-            Token op = peek();
-            switch (op.type) {
-                case TIMES:
-                case DIV:
-                case MOD:
-                    consume();
-                    Expr right = parseSimpleFactor();
-                    left = new BinaryOp(left, op.text, right);
-                    break;
-                default:
-                    return left;
-            }
-        }
-    }
-    
-    private Expr parseSimpleFactor() {
         Token t = consume();
         if (t.type == LPAREN) {
             Expr e = parseExpr();
@@ -224,8 +224,8 @@ public class Parser {
             return e;
         } else {
             switch (t.type) {
-                case MINUS: return new UnaryOp("-", parseSimpleFactor());
-                case NOT: return new UnaryOp("!", parseSimpleFactor());
+                case MINUS: return new UnaryOp("-", parseFactor());
+                case NOT: return new UnaryOp("!", parseFactor());
                 case INTCONST: return new IntConst(Integer.parseInt(t.text));
                 case BOOLCONST: return new BoolConst(Boolean.parseBoolean(t.text));
                 case IDENTIFIER:
